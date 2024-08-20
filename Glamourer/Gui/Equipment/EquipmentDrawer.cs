@@ -47,7 +47,7 @@ public class EquipmentDrawer
         _advancedDyes   = advancedDyes;
         _stainData      = items.Stains;
         _stainCombo     = new GlamourerColorCombo(DefaultWidth - 20, _stainData, favorites);
-        _itemCombo      = EquipSlotExtensions.EqdpSlots.Select(e => new ItemCombo(gameData, items, e, Glamourer.Log, favorites)).ToArray();
+        _itemCombo      = EquipSlotExtensions.EqdpSlots.Select(e => new ItemCombo(gameData, items, e, Glamourer.Log, favorites, textures)).ToArray();
         _bonusItemCombo = BonusExtensions.AllFlags.Select(f => new BonusItemCombo(gameData, items, f, Glamourer.Log, favorites)).ToArray();
         _weaponCombo    = new Dictionary<FullEquipType, WeaponCombo>(FullEquipTypeExtensions.WeaponTypes.Count * 2);
         foreach (var type in Enum.GetValues<FullEquipType>())

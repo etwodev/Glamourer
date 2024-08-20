@@ -19,17 +19,21 @@ public sealed class ItemCombo : FilterComboCache<EquipItem>
     public readonly  string          Label;
     private          ItemId          _currentItem;
     private          float           _innerWidth;
+    private          TextureService  _textureService;
+    private          EquipSlot       _equipSlot;
 
     public PrimaryId CustomSetId   { get; private set; }
     public Variant   CustomVariant { get; private set; }
 
-    public ItemCombo(IDataManager gameData, ItemManager items, EquipSlot slot, Logger log, FavoriteManager favorites)
+    public ItemCombo(IDataManager gameData, ItemManager items, EquipSlot slot, Logger log, FavoriteManager favorites, TextureService textureService)
         : base(() => GetItems(favorites, items, slot), MouseWheelType.Control, log)
     {
-        _favorites    = favorites;
-        Label         = GetLabel(gameData, slot);
-        _currentItem  = ItemManager.NothingId(slot);
-        SearchByParts = true;
+        _favorites      = favorites;
+        _equipSlot      = slot;
+        _textureService = textureService;
+        Label           = GetLabel(gameData, slot);
+        _currentItem    = ItemManager.NothingId(slot);
+        SearchByParts   = true;
     }
 
     protected override void DrawList(float width, float itemHeight)
@@ -60,6 +64,7 @@ public sealed class ItemCombo : FilterComboCache<EquipItem>
     protected override float GetFilterWidth()
         => _innerWidth - 2 * ImGui.GetStyle().FramePadding.X;
 
+    // EWOODS: We should update this to include textures
     protected override bool DrawSelectable(int globalIdx, bool selected)
     {
         var obj  = Items[globalIdx];
@@ -70,7 +75,8 @@ public sealed class ItemCombo : FilterComboCache<EquipItem>
             _currentItem        = obj.ItemId;
             CurrentSelection    = default;
         }
-
+        ImGui.SameLine();
+        UiHelpers.DrawIcon(obj, _textureService, 32, _equipSlot);
         ImGui.SameLine();
         var ret = ImGui.Selectable(name, selected);
         ImGui.SameLine();
